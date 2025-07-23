@@ -1,4 +1,5 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using Azure.Core;
+using Azure.Messaging.ServiceBus;
 using Invoice.API.Configs;
 using Invoice.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -21,18 +22,26 @@ namespace Invoice.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] VentaDto venta)
         {
-            var connectionString = _config.ServiceBusConnectionString;
-            var queueName = _config.QueueName;
+            try
+            {
+                var connectionString = _config.ServiceBusConnectionString;
+                var queueName = _config.QueueName;
 
-            await using var client = new ServiceBusClient(connectionString);
-            var sender = client.CreateSender(queueName);
+                await using var client = new ServiceBusClient(connectionString);
+                var sender = client.CreateSender(queueName);
 
-            var jsonBody = JsonSerializer.Serialize(venta);
-            var message = new ServiceBusMessage(jsonBody);
+                var jsonBody = JsonSerializer.Serialize(venta);
+                var message = new ServiceBusMessage(jsonBody);
 
-            await sender.SendMessageAsync(message);
+                await sender.SendMessageAsync(message);
 
-            return Ok("Mensaje enviado");
+                return Ok("Mensaje enviado");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error interno: {ex.Message}\n{ex.StackTrace}");
+                return StatusCode(500, "Ocurrió un error al generar la factura.");
+            }
         }
     }
 }
