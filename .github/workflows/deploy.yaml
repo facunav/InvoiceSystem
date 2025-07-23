@@ -1,0 +1,50 @@
+name: Build and Deploy Invoice Projects
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      DOTNET_VERSION: '8.0.x'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      # Deploy Invoice.Api
+      - name: Publish Invoice.Api
+        run: dotnet publish Invoice.Api/Invoice.Api.csproj --configuration Release --output ./publish/api
+
+      - name: Deploy Invoice.Api to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: invoice-api-app
+          publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
+          package: ./publish/api
+
+      # Deploy Invoice.Functions
+      - name: Publish Invoice.Functions
+        run: dotnet publish Invoice.Functions/Invoice.Functions.csproj --configuration Release --output ./publish/functions
+
+      - name: Deploy Invoice.Functions to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: invoice-functions-app
+          publish-profile: ${{ secrets.AZURE_FUNCTIONS_PUBLISH_PROFILE }}
+          package: ./publish/functions
