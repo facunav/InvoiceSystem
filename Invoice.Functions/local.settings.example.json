@@ -1,0 +1,13 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ServiceBus": {
+    "ServiceBusConnectionString": "<tu-connection-string-de-service-bus-aqui>",
+    "QueueName": "facturacion"
+  },
+  "AllowedHosts": "*"
+}
