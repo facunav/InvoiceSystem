@@ -1,9 +1,15 @@
 ﻿using Invoice.Generators.Interfaces;
 using Invoice.Shared.Models;
 using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 
 public class QuestFacturaPdfGenerator : IFacturaPdfGenerator
 {
+    public QuestFacturaPdfGenerator()
+    {
+        QuestPDF.Settings.License = LicenseType.Community;
+    }
+
     public byte[] GenerarFactura(VentaDto venta)
     {
         var document = Document.Create(container =>
