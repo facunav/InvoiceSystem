@@ -56,7 +56,7 @@ namespace Invoice.Functions
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al subir la factura al blob storage");
+                _logger.LogError($"ERROR al subir al Blob: {ex.GetType().Name} - {ex.Message}\n{ex.StackTrace}");
             }
         }
     }
