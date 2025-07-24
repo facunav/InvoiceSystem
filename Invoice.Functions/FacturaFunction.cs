@@ -23,7 +23,7 @@ namespace Invoice.Functions
             _logger = loggerFactory.CreateLogger<FacturaFunction>();
             _blobContainerName = configuration["BlobContainerName"];
             _pdfGenerator = pdfGenerator;
-            _blobConnectionString = configuration["AzureWebJobsStorage"];
+            _blobConnectionString = configuration["BlobConnectionString"];
         }
 
         [Function("FacturaFunction")]

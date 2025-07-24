@@ -2,10 +2,9 @@ using Invoice.API.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de logging
-builder.Logging.ClearProviders(); // Limpia cualquier proveedor por defecto
-builder.Logging.AddConsole();     // Agrega logging a consola (visible en Azure log stream)
-builder.Logging.SetMinimumLevel(LogLevel.Information); // Cambiá a Debug si querés más detalle
+builder.Logging.ClearProviders(); 
+builder.Logging.AddConsole();     
+builder.Logging.SetMinimumLevel(LogLevel.Information); 
 
 // Add services to the container.
 builder.Services.Configure<ServiceBusConfig>(
